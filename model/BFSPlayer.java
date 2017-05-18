@@ -41,7 +41,7 @@ public class BFSPlayer extends Player {
         action[] allowedActions = game.getPossibleActions(currentBoard);
         for(action ac : allowedActions) {
             Integer[][] computedBoard = game.computeAction(ac, currentBoard);
-            if(!visitedBoards.contains(computedBoard)) {
+            if(!isBoardAllreadyVisited(computedBoard)) {
                 visitedBoards.add(computedBoard);
             
                 /* Ausgabe von Anzahl der ausgeführten */
@@ -72,6 +72,16 @@ public class BFSPlayer extends Player {
         return actions;
     }
     
+    
+    private boolean isBoardAllreadyVisited(Integer[][] board) {
+        for(Integer[][] b : visitedBoards) {
+            if (b.equals(board)) {
+                return true;
+            }   
+        }
+        
+        return false;
+    }
     
     
 }
