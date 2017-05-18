@@ -24,6 +24,8 @@ public class BFSPlayer extends Player {
         List<Integer[][]> root = new ArrayList<>();
         Integer[][] currentBoard = game.getGameBoard();
         root.add(currentBoard);
+        visitedBoards.add(currentBoard);
+        
         
         System.out.println("Start:");
         System.out.println(game.boardToString(currentBoard));
@@ -40,48 +42,47 @@ public class BFSPlayer extends Player {
         Integer[][] currentBoard = Utility.deepCopyIntegerArray(frontiers.get(0));
         action[] allowedActions = game.getPossibleActions(currentBoard);
         for(action ac : allowedActions) {
-            Integer[][] computedBoard = game.computeAction(ac, currentBoard);
+            Integer[][] computedBoard = Utility.deepCopyIntegerArray(game.computeAction(ac, currentBoard));
             if(!isBoardAllreadyVisited(computedBoard)) {
-                visitedBoards.add(computedBoard);
+                visitedBoards.add(Utility.deepCopyIntegerArray(computedBoard));
             
                 /* Ausgabe von Anzahl der ausgeführten */
-                //i++;
-                //System.out.println(i);
+                i++;
+                System.out.println(i);
                 
                 /* Ausgabe vom vorgehen */
-                System.out.println(ac.name());
-                System.out.println(game.boardToString(computedBoard));
+                //System.out.println(ac.name());
+                //System.out.println(game.boardToString(computedBoard));
             
                 
                 
                 frontiers.add(computedBoard);
                 if(game.isSolution(computedBoard)) {
                     System.out.println("Lösung gefunden!");
-                    System.out.print(game.boardToString(currentBoard));
-                    /*actions.add(0, ac);
-                    solved = true; */
+                    System.out.print(game.boardToString(computedBoard));
+                    //actions.add(0, ac);
+                    solved = true; 
                     return actions;
                 }
             } 
-            
-
         }
         frontiers.remove(0);
-        findSolution(game,frontiers,actions,solved);
+        if(!solved)
+            findSolution(game,frontiers,actions,solved);
 
         return actions;
     }
     
-    
     private boolean isBoardAllreadyVisited(Integer[][] board) {
         for(Integer[][] b : visitedBoards) {
-            if (b.equals(board)) {
-                return true;
-            }   
+            if(b[0][0] == board[0][0] && b[0][1] == board[0][1] && b[0][2] == board[0][2]) {
+                if(b[1][0] == board[1][0] && b[1][1] == board[1][1] && b[1][2] == board[1][2]) {
+                    if((b[2][0] == board[2][0] && b[2][1] == board[2][1] && b[2][2] == board[2][2])) {
+                        return true;
+                    }
+                }  
+            }
         }
-        
         return false;
     }
-    
-    
 }
