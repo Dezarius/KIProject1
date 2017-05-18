@@ -21,11 +21,14 @@ public class BFSPlayer extends Player {
     @Override
     public List<PuzzleGame.action> solve(PuzzleGame game) {
         List<action> result = new ArrayList<>();
-        List<Integer[][]> boards = new ArrayList<>();
+        List<Integer[][]> root = new ArrayList<>();
         Integer[][] currentBoard = game.getGameBoard();
-        boards.add(currentBoard);
+        root.add(currentBoard);
         
-        result = findSolution(game,boards, result, false);
+        System.out.println("Start:");
+        System.out.println(game.boardToString(currentBoard));
+        
+        result = findSolution(game,root, result, false);
         
         return result;
     }
