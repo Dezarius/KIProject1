@@ -22,7 +22,7 @@ public class RandomPlayer extends Player{
         
         Integer[][] currentBoard = game.getGameBoard();
         
-        for(int i = 0; i<20; i++) {
+        for(int i = 0; i<200; i++) {
             action[] allowedActions = game.getPossibleActions(currentBoard);
             int nextAction = (int) Math.ceil(Math.random()* allowedActions.length) - 1;
             action next = allowedActions[nextAction];
