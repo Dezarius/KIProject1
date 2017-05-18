@@ -31,32 +31,37 @@ public class BFSPlayer extends Player {
     }
     
     private int i = 0;
+    List<Integer[][]> visitedBoards = new ArrayList<>();
     
     private List<PuzzleGame.action> findSolution(PuzzleGame game, List<Integer[][]> frontiers, List<PuzzleGame.action> actions, boolean solved) {
         Integer[][] currentBoard = Utility.deepCopyIntegerArray(frontiers.get(0));
         action[] allowedActions = game.getPossibleActions(currentBoard);
         for(action ac : allowedActions) {
             Integer[][] computedBoard = game.computeAction(ac, currentBoard);
-            frontiers.add(computedBoard);
+            if(!visitedBoards.contains(computedBoard)) {
+                visitedBoards.add(computedBoard);
             
-            /* Ausgabe von Anzahl der ausgeführten 
-            i++;
-            System.out.println(i);
-            */
+                /* Ausgabe von Anzahl der ausgeführten */
+                //i++;
+                //System.out.println(i);
+                
+                /* Ausgabe vom vorgehen */
+                System.out.println(ac.name());
+                System.out.println(game.boardToString(computedBoard));
             
-            /* Ausgabe vom vorgehen
-            System.out.println(ac.name());
-            System.out.println(game.boardToString(computedBoard));
-            */
+                
+                
+                frontiers.add(computedBoard);
+                if(game.isSolution(computedBoard)) {
+                    System.out.println("Lösung gefunden!");
+                    System.out.print(game.boardToString(currentBoard));
+                    /*actions.add(0, ac);
+                    solved = true; */
+                    return actions;
+                }
+            } 
             
-            
-            if(game.isSolution(computedBoard)) {
-                System.out.println("Lösung gefunden!");
-                System.out.print(game.boardToString(currentBoard));
-                /*actions.add(0, ac);
-                solved = true; */
-                return actions;
-            }
+
         }
         frontiers.remove(0);
         findSolution(game,frontiers,actions,solved);
