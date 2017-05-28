@@ -44,7 +44,8 @@ public class SlidingPuzzleGUI extends Application implements Observer {
 		// 	e.g. result.add(YOURPLAYER.class);
 		//#---------------------------------------------------------------#
 		result.add(model.RandomPlayer.class);
-                result.add(model.BFSPlayer.class);
+		result.add(model.BFSPlayer.class);
+		result.add(model.AStarPlayer.class);
                 
 		return result;
 	}

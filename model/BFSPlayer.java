@@ -17,6 +17,8 @@ import model.PuzzleGame.action;
  * @author Jan Abelmann
  */
 public class BFSPlayer extends Player {
+
+    List<Integer[][]> visitedBoards = new ArrayList<>();
     
     @Override
     public List<PuzzleGame.action> solve(PuzzleGame game) {
@@ -36,7 +38,7 @@ public class BFSPlayer extends Player {
     }
     
     private int i = 0;
-    List<Integer[][]> visitedBoards = new ArrayList<>();
+
     
     private List<PuzzleGame.action> findSolution(PuzzleGame game, List<Integer[][]> frontiers, List<PuzzleGame.action> actions, boolean solved) {
         Integer[][] currentBoard = Utility.deepCopyIntegerArray(frontiers.get(0));
@@ -45,10 +47,9 @@ public class BFSPlayer extends Player {
             Integer[][] computedBoard = Utility.deepCopyIntegerArray(game.computeAction(ac, currentBoard));
             if(!isBoardAllreadyVisited(computedBoard)) {
                 visitedBoards.add(Utility.deepCopyIntegerArray(computedBoard));
-            
+
                 /* Ausgabe von Anzahl der ausgeführten */
-                i++;
-                System.out.println(i);
+
                 
                 /* Ausgabe vom vorgehen */
                 //System.out.println(ac.name());
@@ -66,9 +67,11 @@ public class BFSPlayer extends Player {
                 }
             } 
         }
+        System.out.println(frontiers.size());
         frontiers.remove(0);
         if(!solved)
             findSolution(game,frontiers,actions,solved);
+
 
         return actions;
     }
