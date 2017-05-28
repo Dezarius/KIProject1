@@ -14,15 +14,19 @@ public class AStarPlayer extends Player {
     public List<PuzzleGame.action> solve(PuzzleGame game) {
         List<PuzzleGame.action> result = new ArrayList<>();
 
-        PriorityQueue<Node> open = new PriorityQueue<>(Comparator.comparingInt(Node::getDist));
+        PriorityQueue<Node> open = new PriorityQueue<>(Comparator.comparingInt(Node::getEstimate));
 
-        open.add(new Node(game.getGameBoard(), game.getHeuristicValue(game.getGameBoard()), 0, null));
+        open.add(new Node(game.getGameBoard(), game.getHeuristicValue(game.getGameBoard()), 0, null, null));
 
         HashSet<Node> closed = new HashSet<>();
         do {
             Node current = open.poll();
             if (game.isSolution(current.getBord())) {
-                System.out.println("Find way");
+                do {
+                    result.add(0, current.getAction());
+                    current = current.getPrevious();
+                } while (current.getPrevious() != null);
+
                 return result;
             }
 
@@ -33,22 +37,25 @@ public class AStarPlayer extends Player {
                 if (closed.stream().anyMatch(node -> Arrays.deepEquals(node.getBord(), nextBord))) {
                     continue;
                 }
-                int way = current.estimate + 1;
+                int way = current.getDist() + 1;
                 if (open.stream().anyMatch(node -> Arrays.deepEquals(node.getBord(), nextBord) && way >= node.getDist())) {
                     continue;
                 }
 
+                Node finalCurrent = current;
                 if (open.stream().noneMatch(node -> {
                     if (Arrays.deepEquals(node.getBord(), nextBord)) {
                         node.setEstimate(way + game.getHeuristicValue(nextBord));
+                        node.setDist(way);
+                        node.setPrevious(finalCurrent);
+                        node.setAction(ac);
                         return true;
                     }
                     return false;
                 })) {
-                    Node next = new Node(nextBord, way + game.getHeuristicValue(nextBord), way, current);
+                    Node next = new Node(nextBord, way + game.getHeuristicValue(nextBord), way, current, ac);
                     open.add(next);
                 }
-
 
             }
 
@@ -59,48 +66,54 @@ public class AStarPlayer extends Player {
 
     private class Node {
 
-        private Integer[][] bord;
+        private final Integer[][] bord;
         private int estimate;
         private int dist;
         private Node previous;
+        private action action;
 
-        public Node(Integer[][] bord, int estimate, int dist, Node previous) {
+        Node(Integer[][] bord, int estimate, int dist, Node previous, action action) {
             this.bord = bord;
             this.estimate = estimate;
             this.dist = dist;
             this.previous = previous;
+            this.action = action;
         }
 
-        public int getEstimate() {
+        action getAction() {
+            return action;
+        }
+
+        void setAction(action action) {
+            this.action = action;
+        }
+
+        int getEstimate() {
             return estimate;
         }
 
-        public void setEstimate(int estimate) {
+        void setEstimate(int estimate) {
             this.estimate = estimate;
         }
 
-        public Node getPrevious() {
+        Node getPrevious() {
             return previous;
         }
 
-        public void setPrevious(Node previous) {
+        void setPrevious(Node previous) {
             this.previous = previous;
         }
 
-        public Integer[][] getBord() {
+        Integer[][] getBord() {
             return bord;
         }
 
-        public void setBord(Integer[][] bord) {
-            this.bord = bord;
+        int getDist() {
+            return dist;
         }
 
-        public int getDist() {
-            return estimate;
-        }
-
-        public void setDist(int dist) {
-            this.estimate = dist;
+        void setDist(int dist) {
+            this.dist = dist;
         }
     }
 }
